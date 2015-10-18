@@ -106,53 +106,191 @@ my @PAM250 = (	[ " ","A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P"
 
 my @score = ();
 
+# Traceback matrix 1 represents left, 2 represents up, 4 represents topleft. The sum can be used to determine if multiple alignments are possible.
+my @trace = ();
 
-for(my $j=0; $j<= length($strA); $j++){
+push(@{$trace[0]},0);
+
+for(my $j=1; $j<= length($strA); $j++){
 	push(@{$score[0]},$j * $gapPen);
+	push(@{$trace[0]},1);
 }
 for(my $i=1; $i<= length($strB); $i++){
 	push(@{$score[$i]},$i * $gapPen);
+	push(@{$trace[$i]},2);
 }
 
 
-for(my $i=1; $i <= length($strA); $i++){
-	for(my $j=1; $j <= length($strB); $j++){
+<STDIN>;
+
+## 2D Array Stuff
+
+my ($i,$j,$posA,$posB,$matchscore,$top,$left,$topleft,@values,$nwscore);
+
+for($i=1; $i <= length($strA); $i++){
+	for($j=1; $j <= length($strB); $j++){
 	
 		# Finds the index in PAM250
-		my $posA = index($ref,substr($strA,$i-1,1));
-		my $posB = index($ref,substr($strB,$j-1,1));
+		$posA = index($ref,substr($strA,$i-1,1));
+		$posB = index($ref,substr($strB,$j-1,1));
 		
 		# Determines match score
-		my $matchscore = $PAM250[$posA][$posB];
+		$matchscore = $PAM250[$posA][$posB];
 		
 		# Determines the top value
-		my $top = $score[$i-1][$j] + $gapPen;
+		$top = $score[$i-1][$j] + $gapPen;
 		
 		# Determines the left value
-		my $left = $score[$i][$j-1] + $gapPen;
+		$left = $score[$i][$j-1] + $gapPen;
 		
 		# Determines the top-left value
-		my $topleft = $score[$i-1][$j-1] + $matchscore;
+		$topleft = $score[$i-1][$j-1] + $matchscore;
+
 		
+		# Traceback matrix sums representing the traceback
+		if($left > $top && $left > $topleft){
+			push(@{$trace[$i]},1);
+		}
+		elsif($top > $left && $top > $topleft){
+			push(@{$trace[$i]},2);
+		}
+		elsif($top == $left && $top > $topleft){
+			push(@{$trace[$i]},3);
+		}		
+		elsif($topleft > $left && $topleft > $top){
+			push(@{$trace[$i]},4);
+		}
+		elsif($topleft > $top && $topleft == $left){
+			push(@{$trace[$i]},5);
+		}
+		elsif($topleft > $left && $topleft == $top){
+			push(@{$trace[$i]},6);
+		}
+		elsif($topleft == $left && $left == $top){
+			push(@{$trace[$i]},7);
+		};
 		
 		# Sorts values and assigns highest value as score
-		my @values=($top,$left, $topleft);
+		@values=($top,$left, $topleft);
 		@values = sort { $b <=> $a } @values;
-		my $nwscore = $values[0];
+		$nwscore = $values[0];
 		
+
 		# Adds score to the right column
 		push(@{$score[$i]},$nwscore);
 	}
 }
 
+my (@aligned,$rows,$columns,$done,$matchA,$matchB);
+
+$rows = length($strA);
+
+$columns = length($strB);
+
 
 foreach my $row(@score) {
     foreach my $element(@$row) {
-	
 		printf("%3d",$element);
     }
 	print "\n";
 }
+
+
+foreach my $row2(@trace) {
+    foreach my $element2(@$row2) {
+		printf("%3d",$element2);
+    }
+	print "\n";
+}
+
+<STDIN>;
+
+$done = 0;
+
+## aligned[0] is strA, aligned[1] is strB
+
+## While loop goes through traceback loop. Creates a single alignment, although there could be many
+## I don't think the alignment is right.. I'm just happy it gives me a result. For now.
+while($done==0){
+	if($trace[$rows][$columns]==1){
+		unshift(@{$aligned[0]},"-");
+		$columns -= 1;
+		print "LEFT-1\n";
+		<STDIN>;
+	}
+	elsif($trace[$rows][$columns]==2){
+		unshift(@{$aligned[1]},"-");
+		$rows -= 1;
+		print "TOP-2\n";
+		<STDIN>;
+	}
+	elsif($trace[$rows][$columns]==3){
+		unshift(@{$aligned[0]},"-");
+		$rows -= 1;
+		print "LEFT-3\n";
+		<STDIN>;
+	}
+	elsif($trace[$rows][$columns]==4){
+		$matchA = substr($strA,$rows,1);
+		$matchB = substr($strB,$columns,1);
+		unshift(@{$aligned[0]},$matchA);
+		unshift(@{$aligned[1]},$matchB);
+		$rows -= 1;
+		$columns -= 1;
+		print "DIAG-4\n";
+		<STDIN>;
+	}
+	elsif($trace[$rows][$columns]==5){
+		unshift(@{$aligned[0]},"-");
+		print "LEFT-5\n";
+		<STDIN>;
+	}
+	elsif($trace[$rows][$columns]==6){
+		$matchA = substr($strA,$rows,1);
+		$matchB = substr($strB,$columns,1);
+		unshift(@{$aligned[0]},$matchA);
+		unshift(@{$aligned[1]},$matchB);
+		$rows -= 1;
+		$columns -= 1;
+		print "DIAG-6\n";
+		<STDIN>;
+	}
+	elsif($trace[$rows][$columns]==7){
+		unshift(@{$aligned[0]},"-");
+		print "LEFT-7\n";
+		$columns -= 1;
+		<STDIN>;
+	}
+	elsif($trace[$rows][$columns]==0){
+		print "DONE";
+		$done=1;
+		<STDIN>;
+	}
+}
+foreach my $row(@aligned) {
+    foreach my $element(@$row) {
+		print $element;
+    }
+	print "\n";
+}
+
+
+
+
+# foreach my $row(@score) {
+    # foreach my $element(@$row) {
+		# printf("%3d",$element);
+    # }
+	# print "\n";
+# }
+
+
+# foreach my $row2(@trace) {
+    # foreach my $element2(@$row2) {
+		# printf("%3d",$element2);
+    # }
+	# print "\n";
+# }
 
 
 
