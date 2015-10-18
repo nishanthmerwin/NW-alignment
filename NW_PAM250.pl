@@ -8,6 +8,8 @@ my $strA="MFCWWYFWPCMF";
 # Gap Penalty
 my $gapPen=-1;
 
+my $ref = " ARNDCQEGHILKMFPSTWYV";
+
 # PAM250 Scoring Matrix
 my @PAM250 = (	[ " ","A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P","S","T","W","Y","V"],
 				["A" , 2 , -2,  0,  0, -2,  0,  0,  1, -1, -1, -2, -1, -1, -3,  1,  1,  1, -6, -3,  0],
@@ -67,36 +69,82 @@ my @PAM250 = (	[ " ","A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P"
 
 #################################################
 
-# Prints the match score of the array using the PAM250 matrix
-my @score = ();
-for(my $i=0; $i < length($strA); $i++){
-	for(my $j=0; $j < length($strB); $j++){
+# Prints the match score of the array using the PAM250 matrix (With a bunch of comments)
+# my @score = ();
+# for(my $i=0; $i < length($strA); $i++){
+	# for(my $j=0; $j < length($strB); $j++){
 	
-		# my $posA = index(@PAM250[0],substr($strA,$i,1));
-		# my $posB = index(@PAM250[0],substr($strB,$j,1));
 		
-		my $ref = join("",@{$PAM250[$0]});
+		# my $ref = join("",@{$PAM250[$0]});
 		
-		my $posA = index($ref,substr($strA,$i,1));
-		my $posB = index($ref,substr($strB,$j,1));
-		
-		
-		
+		# my $posA = index($ref,substr($strA,$i,1));
+		# my $posB = index($ref,substr($strB,$j,1));
 
-		print "The ref is: ", @{$PAM250[$0]},"\n";
-		print "Letter ",substr($strA,$i,1), "found at pos #",$posA,"\n";
-		print "Letter ",substr($strB,$j,1), "found at pos #",$posB,"\n";
+		# print "The ref is: ", @{$PAM250[$0]},"\n";
+		# print "Letter ",substr($strA,$i,1), "found at pos #",$posA,"\n";
+		# print "Letter ",substr($strB,$j,1), "found at pos #",$posB,"\n";
 		
 		
+		# my $matchscore = $PAM250[$posA][$posB];
+		# print "The score for this match is $matchscore\n\n";
+
+		# push(@{$score[$i]},$matchscore);
+	# }
+# }
+
+# foreach my $row(@score) {
+    # foreach my $element(@$row) {
+	
+		# printf("%3d",$element);
+    # }
+	# print "\n";
+# }
+
+#################################################
+
+# Prints the results of the NW score in a table
+
+my @score = ();
+
+
+for(my $j=0; $j<= length($strA); $j++){
+	push(@{$score[0]},$j * $gapPen);
+}
+for(my $i=1; $i<= length($strB); $i++){
+	push(@{$score[$i]},$i * $gapPen);
+}
+
+
+for(my $i=1; $i <= length($strA); $i++){
+	for(my $j=1; $j <= length($strB); $j++){
+	
+		# Finds the index in PAM250
+		my $posA = index($ref,substr($strA,$i-1,1));
+		my $posB = index($ref,substr($strB,$j-1,1));
+		
+		# Determines match score
 		my $matchscore = $PAM250[$posA][$posB];
-		print "The score for this match is $matchscore\n\n";
+		
+		# Determines the top value
+		my $top = $score[$i-1][$j] + $gapPen;
+		
+		# Determines the left value
+		my $left = $score[$i][$j-1] + $gapPen;
+		
+		# Determines the top-left value
+		my $topleft = $score[$i-1][$j-1] + $matchscore;
 		
 		
-		# my $match= $posA.$posB;
-
-		push(@{$score[$i]},$matchscore);
+		# Sorts values and assigns highest value as score
+		my @values=($top,$left, $topleft);
+		@values = sort { $b <=> $a } @values;
+		my $nwscore = $values[0];
+		
+		# Adds score to the right column
+		push(@{$score[$i]},$nwscore);
 	}
 }
+
 
 foreach my $row(@score) {
     foreach my $element(@$row) {
@@ -105,6 +153,12 @@ foreach my $row(@score) {
     }
 	print "\n";
 }
+
+
+
+
+exit;
+
 
 
 
