@@ -1,9 +1,9 @@
 use strict;
 use warnings;
 
-my $strB="MENSNQQSDDEIPTDMNGRKPQKLRRYDSLDLESAKVNGQSGHGLQQGGSWAVILQLAFQ";
+my $strB="AWYWAAATES";
 
-my $strA="MTEPLHTSSNGGAERGPNAAFESEKTLQTTTRLQRFDSLHMEAGKIPGGQSHTAKVGWAT";
+my $strA="MMMMTEWYWP";
 
 # Gap Penalty
 my $gapPen=-1;
@@ -226,58 +226,58 @@ $done = 0;
 ## I don't think the alignment is right.. I'm just happy it gives me a result. For now.
 while($done==0){
 	if($trace[$rows][$columns]==1){
-		$matchA = substr($strA,$rows,1);
-		$matchB = substr($strB,$columns,1);
+		$matchA = substr($strA,$rows-1,1);
+		$matchB = substr($strB,$columns-1,1);
 		unshift(@{$aligned[0]},"-");
 		unshift(@{$aligned[1]},$matchB);
 		$columns -= 1;
 	}
 	elsif($trace[$rows][$columns]==2){
-		$matchA = substr($strA,$rows,1);
-		$matchB = substr($strB,$columns,1);
+		$matchA = substr($strA,$rows-1,1);
+		$matchB = substr($strB,$columns-1,1);
 		unshift(@{$aligned[0]},$matchA);
 		unshift(@{$aligned[1]},"-");
 		$rows -= 1;
 	}
 	elsif($trace[$rows][$columns]==3){
-		$matchA = substr($strA,$rows,1);
-		$matchB = substr($strB,$columns,1);
+		$matchA = substr($strA,$rows-1,1);
+		$matchB = substr($strB,$columns-1,1);
 		unshift(@{$aligned[0]},"-");
 		unshift(@{$aligned[1]},$matchB);
 		$rows -= 1;
 	}
 	elsif($trace[$rows][$columns]==4){
-		$matchA = substr($strA,$rows,1);
-		$matchB = substr($strB,$columns,1);
+		$matchA = substr($strA,$rows-1,1);
+		$matchB = substr($strB,$columns-1,1);
 		unshift(@{$aligned[0]},$matchA);
 		unshift(@{$aligned[1]},$matchB);
 		$rows -= 1;
 		$columns -= 1;
 	}
 	elsif($trace[$rows][$columns]==5){
-		$matchA = substr($strA,$rows,1);
-		$matchB = substr($strB,$columns,1);
+		$matchA = substr($strA,$rows-1,1);
+		$matchB = substr($strB,$columns-1,1);
 		unshift(@{$aligned[0]},$matchA);
 		unshift(@{$aligned[1]},$matchB);
 		$rows -= 1;
 		$columns -= 1;
 	}
 	elsif($trace[$rows][$columns]==6){
-		$matchA = substr($strA,$rows,1);
-		$matchB = substr($strB,$columns,1);
+		$matchA = substr($strA,$rows-1,1);
+		$matchB = substr($strB,$columns-1,1);
 		unshift(@{$aligned[0]},$matchA);
 		unshift(@{$aligned[1]},$matchB);
 		$rows -= 1;
 		$columns -= 1;
 	}
 	elsif($trace[$rows][$columns]==7){
-		$matchA = substr($strA,$rows,1);
-		$matchB = substr($strB,$columns,1);
+		$matchA = substr($strA,$rows-1,1);
+		$matchB = substr($strB,$columns-1,1);
 		unshift(@{$aligned[0]},"-");
 		unshift(@{$aligned[1]},$matchB);
 		$columns -= 1;
 	}
-	elsif($trace[$rows][$columns]==0){
+	elsif($trace[$rows][$columns]==0 && $rows==0 && $columns==0){
 		$done=1;
 	}
 }
