@@ -1,9 +1,9 @@
 use strict;
 use warnings;
 
-my $strB="MDLWVSTCYNMM";
+my $strB="RVSFSGGYHSDAEAGNSGPMSGGQLPPIYKKPGNSRFTAENSQRTRTF";
 
-my $strA="MFCWWYFWPCMF";
+my $strA="MSRVSEVGGYHSDAEAGNSGGNSRFAAENSQRTRPMSGGQLPPIYKKP";
 
 # Gap Penalty
 my $gapPen=-1;
@@ -111,24 +111,41 @@ my @trace = ();
 
 push(@{$trace[0]},0);
 
-for(my $j=1; $j<= length($strA); $j++){
+for(my $j=1; $j <= length($strA); $j++){
 	push(@{$score[0]},$j * $gapPen);
 	push(@{$trace[0]},1);
 }
-for(my $i=1; $i<= length($strB); $i++){
+for(my $i=1; $i <= length($strB); $i++){
 	push(@{$score[$i]},$i * $gapPen);
 	push(@{$trace[$i]},2);
 }
 
 
-<STDIN>;
+
+
+
+foreach my $row(@score) {
+    foreach my $element(@$row) {
+		printf("%3d",$element);
+    }
+	print "\n";
+}
+
+
+foreach my $row2(@trace) {
+    foreach my $element2(@$row2) {
+		printf("%3d",$element2);
+    }
+	print "\n";
+}
+
 
 ## 2D Array Stuff
 
 my ($i,$j,$posA,$posB,$matchscore,$top,$left,$topleft,@values,$nwscore);
 
-for($i=1; $i <= length($strA); $i++){
-	for($j=1; $j <= length($strB); $j++){
+for($i=1; $i <= length($strB); $i++){
+	for($j=1; $j <= length($strA); $j++){
 	
 		# Finds the index in PAM250
 		$posA = index($ref,substr($strA,$i-1,1));
@@ -139,14 +156,13 @@ for($i=1; $i <= length($strA); $i++){
 		
 		# Determines the top value
 		$top = $score[$i-1][$j] + $gapPen;
-		
+
 		# Determines the left value
 		$left = $score[$i][$j-1] + $gapPen;
 		
 		# Determines the top-left value
 		$topleft = $score[$i-1][$j-1] + $matchscore;
 
-		
 		# Traceback matrix sums representing the traceback
 		if($left > $top && $left > $topleft){
 			push(@{$trace[$i]},1);
@@ -172,6 +188,15 @@ for($i=1; $i <= length($strA); $i++){
 		
 		# Sorts values and assigns highest value as score
 		@values=($top,$left, $topleft);
+		
+		# if($left == -1){
+			# print "@values\n";
+			# print "Row is $i, Column is $j\n";
+			# print "Cell to left is (i,j):($i,$j) and it's value is $score[$i][$j-1]\n";
+			# <STDIN>;
+		# }
+		
+		
 		@values = sort { $b <=> $a } @values;
 		$nwscore = $values[0];
 		
@@ -187,23 +212,13 @@ $rows = length($strA);
 
 $columns = length($strB);
 
+print "The final scores are top:$top left:$left topleft:$topleft\n";
 
-foreach my $row(@score) {
-    foreach my $element(@$row) {
-		printf("%3d",$element);
-    }
-	print "\n";
-}
+print "There are $rows rows and $columns columns\n";
 
 
-foreach my $row2(@trace) {
-    foreach my $element2(@$row2) {
-		printf("%3d",$element2);
-    }
-	print "\n";
-}
 
-<STDIN>;
+
 
 $done = 0;
 
@@ -213,22 +228,25 @@ $done = 0;
 ## I don't think the alignment is right.. I'm just happy it gives me a result. For now.
 while($done==0){
 	if($trace[$rows][$columns]==1){
+		$matchA = substr($strA,$rows,1);
+		$matchB = substr($strB,$columns,1);
 		unshift(@{$aligned[0]},"-");
+		unshift(@{$aligned[1]},$matchB);
 		$columns -= 1;
-		print "LEFT-1\n";
-		<STDIN>;
 	}
 	elsif($trace[$rows][$columns]==2){
+		$matchA = substr($strA,$rows,1);
+		$matchB = substr($strB,$columns,1);
+		unshift(@{$aligned[0]},$matchA);
 		unshift(@{$aligned[1]},"-");
 		$rows -= 1;
-		print "TOP-2\n";
-		<STDIN>;
 	}
 	elsif($trace[$rows][$columns]==3){
+		$matchA = substr($strA,$rows,1);
+		$matchB = substr($strB,$columns,1);
 		unshift(@{$aligned[0]},"-");
+		unshift(@{$aligned[1]},$matchB);
 		$rows -= 1;
-		print "LEFT-3\n";
-		<STDIN>;
 	}
 	elsif($trace[$rows][$columns]==4){
 		$matchA = substr($strA,$rows,1);
@@ -237,13 +255,12 @@ while($done==0){
 		unshift(@{$aligned[1]},$matchB);
 		$rows -= 1;
 		$columns -= 1;
-		print "DIAG-4\n";
-		<STDIN>;
 	}
 	elsif($trace[$rows][$columns]==5){
-		unshift(@{$aligned[0]},"-");
-		print "LEFT-5\n";
-		<STDIN>;
+		$matchA = substr($strA,$rows,1);
+		$matchB = substr($strB,$columns,1);
+		unshift(@{$aligned[0]},$matchA);
+		unshift(@{$aligned[1]},$matchB);
 	}
 	elsif($trace[$rows][$columns]==6){
 		$matchA = substr($strA,$rows,1);
@@ -252,21 +269,20 @@ while($done==0){
 		unshift(@{$aligned[1]},$matchB);
 		$rows -= 1;
 		$columns -= 1;
-		print "DIAG-6\n";
-		<STDIN>;
 	}
 	elsif($trace[$rows][$columns]==7){
+		$matchA = substr($strA,$rows,1);
+		$matchB = substr($strB,$columns,1);
 		unshift(@{$aligned[0]},"-");
-		print "LEFT-7\n";
+		unshift(@{$aligned[1]},$matchB);
 		$columns -= 1;
-		<STDIN>;
 	}
 	elsif($trace[$rows][$columns]==0){
-		print "DONE";
 		$done=1;
-		<STDIN>;
 	}
 }
+
+
 foreach my $row(@aligned) {
     foreach my $element(@$row) {
 		print $element;
