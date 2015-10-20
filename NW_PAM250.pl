@@ -1,9 +1,9 @@
 use strict;
 use warnings;
 
-my $strB="RVSFSGGYHSDAEAGNSGPMSGGQLPPIYKKPGNSRFTAENSQRTRTF";
+my $strB="MENSNQQSDDEIPTDMNGRKPQKLRRYDSLDLESAKVNGQSGHGLQQGGSWAVILQLAFQ";
 
-my $strA="MSRVSEVGGYHSDAEAGNSGGNSRFAAENSQRTRPMSGGQLPPIYKKP";
+my $strA="MTEPLHTSSNGGAERGPNAAFESEKTLQTTTRLQRFDSLHMEAGKIPGGQSHTAKVGWAT";
 
 # Gap Penalty
 my $gapPen=-1;
@@ -109,6 +109,8 @@ my @score = ();
 # Traceback matrix 1 represents left, 2 represents up, 4 represents topleft. The sum can be used to determine if multiple alignments are possible.
 my @trace = ();
 
+
+push(@{$score[0]},0);
 push(@{$trace[0]},0);
 
 for(my $j=1; $j <= length($strA); $j++){
@@ -124,20 +126,6 @@ for(my $i=1; $i <= length($strB); $i++){
 
 
 
-foreach my $row(@score) {
-    foreach my $element(@$row) {
-		printf("%3d",$element);
-    }
-	print "\n";
-}
-
-
-foreach my $row2(@trace) {
-    foreach my $element2(@$row2) {
-		printf("%3d",$element2);
-    }
-	print "\n";
-}
 
 
 ## 2D Array Stuff
@@ -212,12 +200,22 @@ $rows = length($strA);
 
 $columns = length($strB);
 
-print "The final scores are top:$top left:$left topleft:$topleft\n";
+foreach my $row(@score) {
+    foreach my $element(@$row) {
+		printf("%3d",$element);
+    }
+	print "\n";
+}
+
+
+foreach my $row2(@trace) {
+    foreach my $element2(@$row2) {
+		printf("%3d",$element2);
+    }
+	print "\n";
+}
 
 print "There are $rows rows and $columns columns\n";
-
-
-
 
 
 $done = 0;
@@ -261,6 +259,8 @@ while($done==0){
 		$matchB = substr($strB,$columns,1);
 		unshift(@{$aligned[0]},$matchA);
 		unshift(@{$aligned[1]},$matchB);
+		$rows -= 1;
+		$columns -= 1;
 	}
 	elsif($trace[$rows][$columns]==6){
 		$matchA = substr($strA,$rows,1);
