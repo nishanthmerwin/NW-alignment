@@ -2,13 +2,13 @@ use strict;
 use warnings;
 
 
-my $strA="CAT";
-my $strB="GTG";
+my $strA="CACAGGGAGTAG";
+my $strB="GTGAGG";
 
 
 
 # Gap Penalty
-my $gapPen=-3;
+my $gapPen=-1;
 
 my $ref = " ACGT";
 
@@ -18,74 +18,6 @@ my @PAM250 = (	[ " ","A","C","G","T"],
 				["C" ,  0,  1,  0,  0],
                 ["G" ,  0,  0,  1,  0],
 				["T" ,  0,  0,  0,  1]);
-# Prints the PAM250 Scoring Matrix
-# foreach my $row(@PAM250) {
-    # foreach my $element(@$row) {
-		
-        # my $len = length($element);
-		
-		# if($len==1){
-			# print "  ",$element;
-		# }
-		# elsif($len==2){
-			# print " ",$element;
-		# }
-    # }
-	# print "\n";
-# }
-
-#############################################
-
-# Prints the matches
-# my @score = ();
-# for(my $i=0; $i < length($strA); $i++){
-	# for(my $j=0; $j < length($strB); $j++){
-		# my $match = substr($strA,$i,1).":".substr($strB,$j,1);
-		# push(@{$score[1]},$match);
-	# }
-# }
-
-# foreach my $row(@score) {
-    # foreach my $element(@$row) {	
-		# print " $element ";
-    # }
-	# print "\n";
-# }
-
-#################################################
-
-# Prints the match score of the array using the PAM250 matrix (With a bunch of comments)
-# my @score = ();
-# for(my $i=0; $i < length($strA); $i++){
-	# for(my $j=0; $j < length($strB); $j++){
-	
-		
-		# my $ref = join("",@{$PAM250[$0]});
-		
-		# my $posA = index($ref,substr($strA,$i,1));
-		# my $posB = index($ref,substr($strB,$j,1));
-
-		# print "The ref is: ", @{$PAM250[$0]},"\n";
-		# print "Letter ",substr($strA,$i,1), "found at pos #",$posA,"\n";
-		# print "Letter ",substr($strB,$j,1), "found at pos #",$posB,"\n";
-		
-		
-		# my $matchscore = $PAM250[$posA][$posB];
-		# print "The score for this match is $matchscore\n\n";
-
-		# push(@{$score[$i]},$matchscore);
-	# }
-# }
-
-# foreach my $row(@score) {
-    # foreach my $element(@$row) {
-	
-		# printf("%3d",$element);
-    # }
-	# print "\n";
-# }
-
-#################################################
 
 # Prints the results of the NW score in a table
 
@@ -108,24 +40,29 @@ for(my $i=1; $i <= length($strB); $i++){
 }
 
 
-
-
-
-
-
 ## 2D Array Stuff
 
-my ($i,$j,$posA,$posB,$matchscore,$top,$left,$topleft,@values,$nwscore);
+my ($i,$j,$posA,$posB,$matchscore,$top,$left,$topleft,@values,$nwscore,$letA,$letB);
 
 for($i=1; $i <= length($strB); $i++){
 	for($j=1; $j <= length($strA); $j++){
 	
 		# Finds the index in PAM250
-		$posA = index($ref,substr($strA,$i-1,1));
-		$posB = index($ref,substr($strB,$j-1,1));
+		
+		$letA = substr($strA,$i-1,1);
+		$letB = substr($strB,$j-1,1);
+	
+		
+		$posA = index($ref,$letA);
+		$posB = index($ref,$letB);
+		
+		print "posA, $letA is at $posA, posB, $letB is at $posB\n";
 		
 		# Determines match score
 		$matchscore = $PAM250[$posA][$posB];
+		
+		print "Match score is $matchscore\n";
+		
 		
 		# Determines the top value
 		$top = $score[$i-1][$j] + $gapPen;
@@ -135,7 +72,10 @@ for($i=1; $i <= length($strB); $i++){
 		
 		# Determines the top-left value
 		$topleft = $score[$i-1][$j-1] + $matchscore;
-
+		
+		print "topleft value is: ",$score[$i-1][$j-1],"\n","i is $i, j is $j";
+		<STDIN>;
+		
 		# Traceback matrix sums representing the traceback
 		if($left > $top && $left > $topleft){
 			push(@{$trace[$i]},1);
@@ -181,9 +121,9 @@ for($i=1; $i <= length($strB); $i++){
 
 my (@aligned,$rows,$columns,$done,$matchA,$matchB);
 
-$rows = length($strA);
+$columns = length($strA);
 
-$columns = length($strB);
+$rows = length($strB);
 
 foreach my $row(@score) {
     foreach my $element(@$row) {
@@ -210,6 +150,10 @@ $done = 0;
 ## While loop goes through traceback loop. Creates a single alignment, although there could be many
 ## I don't think the alignment is right.. I'm just happy it gives me a result. For now.
 while($done==0){
+	
+	print "row is $rows, column is $columns\n";
+	<STDIN>;
+	
 	if($trace[$rows][$columns]==1){
 		$matchA = substr($strA,$rows-1,1);
 		$matchB = substr($strB,$columns-1,1);
