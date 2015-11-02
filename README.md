@@ -17,6 +17,6 @@ Current plans for updates:
 
 - Print out aligned sequences (remove matrices)
 
-- Drop down menu for scoring matrices (ex. Ts/Tv, PAM, BLOSUM, etc)
+- Drop down menu for scoring matrices (ex. Ts/Tv, PAM, BLOSUM, etc) --- DONE!!
 
 - Allow for initation/extension gap penalties

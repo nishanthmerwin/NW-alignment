@@ -2,14 +2,6 @@
 
 shinyServer(function(input, output) {
     
-    ## Setting up the id matrix
-    Abp <- c(1,0,0,0)
-    Cbp <- c(0,1,0,0)
-    Tbp <- c(0,0,1,0)
-    Gbp <- c(0,0,0,1)
-    dna <- c("A","C","T","G")
-    dim <- list(x=dna,y=dna)
-    id_matrix <- matrix(data=c(Abp,Cbp,Tbp,Gbp),nrow=4,ncol=4,dimnames=dim)
     
     
     traceFun <- function(top, left, topleft){
@@ -49,26 +41,30 @@ shinyServer(function(input, output) {
     
     NW <- function(seqA,seqB,gapPen,id_matrix){
         
-        seqA <- strsplit(seqA,c())[[1]]
+        seqA <- strsplit(toupper(seqA),c())[[1]]
         
-        seqB <- strsplit(seqB,c())[[1]]
+        seqB <- strsplit(toupper(seqB),c())[[1]]
         
         # Creates empty matrices
         start <- create(seqA,seqB,gapPen)
         score <- start[[1]]
         trace <- start[[2]]
         
+        # Creates reference sequence from scoring matrix
+        
+        ref <- names(id_matrix)
+        
         for (i in seq(2,length(seqA)+1,by=1)){
             for (j in seq(2,length(seqB)+1,by=1)){
                 # Finds the match score
                 posA <- seqA[i-1]
                 posB <- seqB[j-1]
-                posA <- match(posA,dna)
-                posB <- match(posB,dna)
+                posA <- match(posA,ref)
+                posB <- match(posB,ref)
                 matchVal <- id_matrix[posA,][posB]
                 
                 # Determines the top score
-                topleft <- score[(i-1),][j-1] + matchVal
+                topleft <- as.integer(score[(i-1),][j-1] + matchVal)
                 top <- score[(i-1),][j] + gapPen
                 left <- score[i,][j-1] + gapPen
                 
@@ -116,10 +112,18 @@ shinyServer(function(input, output) {
    
    
    
-   output$score <- renderTable({ NW(input$seqA,input$seqB, input$slider1 ,id_matrix)[[1]] },include.rownames=F,include.colnames=F)
+   output$score <- renderTable({ 
+       
+       NW(input$seqA,input$seqB, input$slider1 ,read.table(input$scoring_matrix))[[1]] 
+       
+       },include.rownames=F,include.colnames=F)
    
    
-   output$trace <- renderTable({ NW(input$seqA,input$seqB, input$slider1 ,id_matrix)[[2]] },include.rownames=F,include.colnames=F)
+   output$trace <- renderTable({ 
+       
+       NW(input$seqA,input$seqB, input$slider1 ,scoring_matrix <- read.table(input$scoring_matrix))[[2]] 
+       
+       },include.rownames=F,include.colnames=F)
 #    
 #    output$trace <- eventReactive(input$button,{ 
 #        renderDataTable({
