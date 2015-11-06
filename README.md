@@ -19,4 +19,4 @@ Current plans for updates:
 
 - Drop down menu for scoring matrices (ex. Ts/Tv, PAM, BLOSUM, etc) --- DONE!!
 
-- Allow for initation/extension gap penalties
+- Allow for initation/extension gap penalties --- DONE!!
