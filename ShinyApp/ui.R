@@ -19,7 +19,10 @@ shinyUI(fluidPage(
                                        "Protein: PAM40"= "PAM40.txt", "Protein: PAM250" = "PAM250.txt"), 
                         selected = 1),
             
-            sliderInput("slider1", label = ("Gap Penalty"), min = -10, max = 0, value = -1),
+            sliderInput("slider1", label = ("Gap Extend Penalty"), min = -10, max = 0, value = -1),
+
+            sliderInput("slider2", label = ("Gap Start Penalty"), min = -10, max = 0, value = -1),
+            
             
             actionButton("button", "Click to Generate the matrices!")
             
@@ -27,28 +30,14 @@ shinyUI(fluidPage(
         
         mainPanel(
             
-            h3("Score Matrix"),
-            tableOutput("score"),
-            h3("Trace Matrix"),
-            ("In the trace matrix, a binary system is used to classify where each cell is calculated from while accounting for multiple tracebacks."),
-            h1(" "),
-            ("1=Left 2=Top 3=Top and Left 4=Topleft 5=Topleft and left 6=Topleft and top 7=Topleft, top and left"),
-            tableOutput("trace")
-            
-            
+            h3("Match Matrix"),
+            tableOutput("match"),
+            h3("Gap in Sequence 1 Matrix"),
+            tableOutput("gap1"),
+            h3("Gap in Sequence 2 Matrix"),
+            tableOutput("gap2")
+               
         )
-        
-        
         )
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 ))
