@@ -2,7 +2,7 @@ shinyUI(fluidPage(
     
     # Copy the line below to make a text input box
     
-    titlePanel("Needleman-Wunsch Scoring Algorithm (Identity Matrix)"),
+    titlePanel("Needleman-Wunsch Scoring Algorithm"),
     
     
     sidebarLayout(
@@ -30,12 +30,11 @@ shinyUI(fluidPage(
         
         mainPanel(
             
-            h3("Match Matrix"),
-            tableOutput("match"),
-            h3("Gap in Sequence 1 Matrix"),
-            tableOutput("gap1"),
-            h3("Gap in Sequence 2 Matrix"),
-            tableOutput("gap2")
+            h3("Alignment"),
+            textOutput("seqA"),
+            textOutput("match"),
+            textOutput("seqB")
+            
                
         )
         )

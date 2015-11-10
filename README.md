@@ -15,7 +15,13 @@ Current plans for updates:
 
 - Include drop down menu for Global / Local alignment
 
-- Print out aligned sequences (remove matrices)
+- Format printed aligned sequences
+
+- Print out summary statistics for aligned sequences (ex. number of gaps, number of matches, total score??)
+
+
+
+- Print out aligned sequences (remove matrices) -- DONE!!
 
 - Drop down menu for scoring matrices (ex. Ts/Tv, PAM, BLOSUM, etc) --- DONE!!
 
