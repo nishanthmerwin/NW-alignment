@@ -21,19 +21,37 @@ shinyUI(fluidPage(
             
             sliderInput("slider1", label = ("Gap Extend Penalty"), min = -10, max = 0, value = -1),
 
-            sliderInput("slider2", label = ("Gap Start Penalty"), min = -10, max = 0, value = -1),
+            sliderInput("slider2", label = ("Gap Start Penalty"), min = -10, max = 0, value = -5),
             
             
-            actionButton("button", "Click to Generate the matrices!")
+            actionButton("button", "Click to Align!")
             
         ),
         
         mainPanel(
             
             h3("Alignment"),
-            textOutput("seqA"),
-            textOutput("match"),
-            textOutput("seqB")
+            verbatimTextOutput("seqAo"),
+            verbatimTextOutput("matcho"),
+            verbatimTextOutput("seqBo"),
+            
+            tags$head(tags$style("#seqAo{color: black;
+                                 font-size: 2em;
+                                 font-style: courier;
+                                 }
+                                  #matcho{color: black;
+                                 font-size: 2em;
+                                 font-style: 'Lucida Console';
+                                 }
+                                  #seqBo{color: black;
+                                 font-size: 2em;
+                                 font-style: courier;
+                                 }
+                                 "
+                                 
+                                 
+                                 ))
+            
             
                
         )

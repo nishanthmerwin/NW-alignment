@@ -5,7 +5,7 @@ fillMat <- function(seqA,seqB,gapPen,gapStart,matrix){
     seqB <- strsplit(toupper(seqB),c())[[1]]
     
     # Creates empty matrices
-    start <- create(seqA,seqB,gapPen,gapStart)
+    start <- createMat(seqA,seqB,gapPen,gapStart)
     matchMat <- start[[1]]
     gap1 <- start[[2]]
     gap2 <- start[[3]]

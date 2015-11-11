@@ -15,7 +15,9 @@ Current plans for updates:
 
 - Include drop down menu for Global / Local alignment
 
-- Format printed aligned sequences
+- Format printed aligned sequences (Kinda done.. could be much better)
+
+- Work on JS processing for layout.
 
 - Print out summary statistics for aligned sequences (ex. number of gaps, number of matches, total score??)
 
