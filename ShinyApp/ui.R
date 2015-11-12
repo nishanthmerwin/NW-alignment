@@ -10,9 +10,9 @@ shinyUI(fluidPage(
         
         sidebarPanel(
             
-            textInput("seqA", label = ("Enter DNA/Protein sequence 1"), value = toupper("a")),
+            textInput("seqA", label = ("Enter DNA/Protein sequence 1"), value = toupper("agt")),
             
-            textInput("seqB", label = ("Enter DNA/Protein sequence 2"), value = toupper("t")),
+            textInput("seqB", label = ("Enter DNA/Protein sequence 2"), value = toupper("tga")),
             
             selectInput("scoring_matrix", label = ("Choose scoring matrix"), 
                         choices = list("DNA: Identity" = "ID.txt", "DNA: Transition/Transversion" = "TSTV.txt", "Protein: BLOSUM62" = "BLOSUM.txt",
