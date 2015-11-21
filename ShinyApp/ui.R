@@ -31,13 +31,15 @@ shinyUI(fluidPage(
         mainPanel(
             
             h3("Alignment"),
-            verbatimTextOutput("seqAo"),
-            verbatimTextOutput("matcho"),
-            verbatimTextOutput("seqBo"),
+            tags$pre(
+            textOutput("seqAo"),
+            textOutput("matcho"),
+            textOutput("seqBo")),
             
             tags$head(tags$style("#seqAo{color: black;
                                  font-size: 2em;
                                  font-style: courier;
+                                 margin-bottom:-2em
                                  }
                                   #matcho{color: black;
                                  font-size: 2em;
@@ -46,6 +48,8 @@ shinyUI(fluidPage(
                                   #seqBo{color: black;
                                  font-size: 2em;
                                  font-style: courier;
+                                 margin-top: -2em;
+                                 margin-bottom: 0em;
                                  }
                                  "
                                  
